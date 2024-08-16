@@ -75,6 +75,36 @@ def getGameRoomUserNames():
     except Exception as e:
         return jsonify({'success': False,
                         'message': str(e)})
+        
+        
+#ALL GAME ROUTES MUST BE SWAPPED FOR WEB SOCKETS!!!!!
+@app.route('/game/drawNewCard', methods=['POST'])
+def drawNewCard():
+    try:
+        gameId = request.json['gameId']
+        userName = request.json['userName']
+        
+        for roomPair in activeGames:
+            if roomPair[0].gameId == gameId:
+                if userName in roomPair[1]:
+                    game = roomPair[0]
+                    for player in game.players:
+                        if player.userName == userName:
+                            drawnCard = game.drawCard(player)
+                            return jsonify({
+                            'title': drawnCard.title,
+                            'description': drawnCard.description,
+                            'artWork': drawnCard.imageURl,
+                            'cardType': drawnCard.cardType})
+                        
+                    #Player found in specified game.
+            return jsonify({'success': False,
+                        'message': str(e)})
+                    
+
+    except Exception as e:
+        return jsonify({'success': False,
+                        'message': str(e)})
 
 
 

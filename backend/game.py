@@ -96,6 +96,8 @@ class Game:
             self.players[self.currentPlayerTurnIndex].attacked = False
         else:
             self.advanceTurn(1)
+        
+        return(drawnCard)
             
             
             
