@@ -98,7 +98,38 @@ def drawNewCard():
                             'cardType': drawnCard.cardType})
                         
                     #Player found in specified game.
-            return jsonify({'success': False,
+        return jsonify({'success': False,
+                        'message': str(e)})
+                    
+
+    except Exception as e:
+        return jsonify({'success': False,
+                        'message': str(e)})
+        
+
+@app.route('/game/playCard', methods=['POST'])
+def playCard():
+    try:
+        gameId = request.json['gameId']
+        userName = request.json['userName']
+        cardType = request.json['cardType']
+        
+        targetPlayer = request.json['targetPlayer'] #For favour or nope cards
+        
+        for roomPair in activeGames:
+            if roomPair[0].gameId == gameId:
+                if userName in roomPair[1]:
+                    game = roomPair[0]
+                    for player in game.players:
+                        if player.userName == userName:
+                            playCard = game.playCard(player, cardType, targetPlayer)
+                            return jsonify({
+                            'success': True,
+                            'data': playCard
+                            })
+                        
+                    #Player found in specified game.
+        return jsonify({'success': False,
                         'message': str(e)})
                     
 

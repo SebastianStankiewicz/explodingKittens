@@ -22,7 +22,7 @@ const Deck = () => {
     //Bring to the store/ seperate file for websocket "stuff"
     const getNextCardToBeDrawn = async () => {
       try{
-        const response = await drawNewCardAPI("a", 2272);
+        const response = await drawNewCardAPI("a", 2178);
         console.log(response)
         drawNewCard(response);
 

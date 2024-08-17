@@ -61,25 +61,35 @@ class Game:
                 if cardType == "attack":
                     self.advanceTurn(1)
                     self.players[targetIndex].attacked = True
+                    data = {"cardPlayed": cardType,
+                            "attackedPlayerName": self.players[targetIndex].userName,}
                 if cardType == "skip":
                     self.advanceTurn(1)
+                    data = {"cardPlayed": cardType,}
                 if cardType == "favour": 
-                    pass
                     print("Come back and do later")
                 if cardType == "future": 
+                    nextCards = []
                     if len(self.deck) < 3:
                         for card in self.deck:
-                            print(card.title)
+                            nextCards.append(card.title)
                     else:
                         print(*(card.title for card in self.deck[:3]))
+                        nextCards.extend(card.title for card in self.deck[:3]) #I think this is wrong or Im drawing from the wrong end of the deck.
+                    data = {"cardPlayed": cardType,
+                            "nextThreeCards": nextCards}
 
                 if cardType == "shuffle":
                     random.shuffle(self.deck)
+                    data = {"cardPlayed": cardType
+                            }
                 if cardType == "junk":
-                    print("Does nothing")
+                    data = {"cardPlayed": cardType}
+                return data
             else:
                 print(f"Dont have in hand {cardType}")
-                    
+            
+        return {"message": "Card not in hand"}
                 
     def drawCard(self, player):
         print(f"{self.players[self.currentPlayerTurnIndex].userName} Drew a card")
