@@ -7,7 +7,11 @@ import {
 import "./index.css";
 import Root from "./routes/Root";
 import GamePage from "./routes/GamePage";
+import MainMenu from "./routes/MainMenu";
+import GameLobby from "./routes/GameLobby";
 
+
+//Refactor this so routes have correct children routes
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,6 +20,14 @@ const router = createBrowserRouter([
   {
     path: "gamePage",
     element: <GamePage/>,
+  },
+  {
+    path: "mainMenu",
+    element: <MainMenu/>,
+  },
+  {
+    path: "gameLobby",
+    element: <GameLobby/>,
   },
 
 ]);

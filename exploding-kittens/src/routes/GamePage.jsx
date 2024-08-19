@@ -12,6 +12,7 @@ const GamePage = () => {
 
   return (
     <>
+    <div className="bg-gray-100">
       <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-10">
         <TurnOrder />
       </div>
@@ -22,13 +23,14 @@ const GamePage = () => {
           {/* Space between Deck and PlayCardArea */}
           <Deck />
         </div>
-        <div className="w-full max-w-4xl h-[300px]">
+        <div className="w-full max-w-4xl h-[300px] ">
           <PlayCardArea draggedCard={draggedCard} setDraggedCard={setDraggedCard} />
         </div>
       </div>
 
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-300">
         <PlayerHand setDraggedCard={setDraggedCard} />
+      </div>
       </div>
     </>
   );

@@ -47,6 +47,45 @@ const useStore = create((set) => ({
     },
   ],
 
+  gameId: null,
+  userName: null,
+  setGameId: (newGameId) => set({ gameId: newGameId }),
+    
+  setUserName: (newUserName) => set({ userName: newUserName }),
+
+  lobbyUserNames: [],
+
+  socketData: [],
+
+  connect: (url) => {
+        const socket = io(url);
+
+        socket.on('connect', () => {
+            console.log('Connected to socket.io server');
+            set({ socket });
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from socket.io server');
+            set({ socket: null });
+        });
+
+        socket.on('update', (message) => {
+            set((state) => ({
+              socketData: [...state.socketData, message],
+            }));
+        });
+
+        set({ socket });
+    },
+
+  sendData: (message) => {
+      const { socket } = useSocketStore.getState();
+      if (socket) {
+          socket.emit('message', message);
+      }
+  },
+
   addCardToPlayArea: (card) =>
     set((state) => {
       const cardIndex = state.cardsInPlayerHand.findIndex(
@@ -75,6 +114,9 @@ const useStore = create((set) => ({
         cardsInPlayArea: [...state.cardsInPlayArea, card],
       };
     }),
+
+
+  
 }));
 
 export default useStore;

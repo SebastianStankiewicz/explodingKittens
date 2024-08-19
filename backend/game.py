@@ -27,8 +27,8 @@ createCards("Rainbow Cat", "Junk","imgURL",  "junk", 4)
 
 
 class Game:
-    def __init__(self) -> None:
-        self.gameId = random.randint(1, 10000)
+    def __init__(self, gameId) -> None:
+        self.gameId = gameId
         self.players = []
         self.deck = []
         self.currentPlayerTurnIndex = 0
