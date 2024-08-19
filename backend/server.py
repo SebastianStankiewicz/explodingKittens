@@ -15,6 +15,27 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 activeGames = []
 
+@socketio.on('createRoom')
+def create_game(data):
+    if 'userName' in data:
+        hostUserName = data['userName']
+    else:
+        send("Error: Username not provided.", to=request.sid)
+        return
+    if not hostUserName:
+        send("Error: Username is required.", to=request.sid)
+        return
+    
+    room = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    #join_room(room)
+    game = Game(room)
+    activeGames.append([game, []])
+    emit('game_created', {'roomCode': room})
+    data = {"userName": data["userName"],
+            "gameId": room}
+    joinGame(data)
+
+
 @socketio.on('joinGame')
 def joinGame(data):
     if 'userName' in data and 'gameId' in data:
@@ -35,24 +56,6 @@ def joinGame(data):
     emit('player_joined_game', {'playerUserNames': roomPair[1]}, to=gameId)
     
     
-@socketio.on('createRoom')
-def create_game(data):
-    if 'userName' in data:
-        hostUserName = data['userName']
-    else:
-        send("Error: Username not provided.", to=request.sid)
-        return
-    if not hostUserName:
-        send("Error: Username is required.", to=request.sid)
-        return
-    
-    room = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-    join_room(room)
-    game = Game(room)
-    activeGames.append([game, []])
-    
-    
-    emit('game_created', {'room': room, 'host': hostUserName}, to=room)
 
 
 
