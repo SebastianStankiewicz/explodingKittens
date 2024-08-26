@@ -4,6 +4,9 @@ import nopeCardArt from "./cardArtWork/Nope-A-Jackanope-Bounds-into-the-Room.jpg
 import beardCatArt from "./cardArtWork/Beard-Cat.jpg";
 import defuseCardArt from "./cardArtWork/Defuse-Via-3AM-Flatulence.jpg";
 
+import { io } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
+
 const useStore = create((set) => ({
   cardsInPlayArea: [
     {
@@ -53,8 +56,13 @@ const useStore = create((set) => ({
   setUserName: (newUserName) => set({ userName: newUserName }),
 
   lobbyUserNames: [],
+  numberOfPlayersToJoin: null,
+
+  gameStarted: false,
 
   socketData: [],
+
+  
 
   connect: (url) => {
     const socket = io(url);
@@ -63,6 +71,21 @@ const useStore = create((set) => ({
       console.log("Connected to socket.io server");
       set({ socket });
     });
+
+    socket.on("game_created", (message) => {
+      console.log(message);
+      set({ gameId: message.roomCode });
+    });
+
+    socket.on("player_joined_game", (message) => {
+      console.log(message);
+      set( {lobbyUserNames: message.playerUserNames})
+      set( {numberOfPlayersToJoin: message.playersLeftToJoin})
+    });
+
+    socket.on("start_game", () => {
+      set({gameStarted: true});
+    })
 
     socket.on("disconnect", () => {
       console.log("Disconnected from socket.io server");
@@ -79,12 +102,18 @@ const useStore = create((set) => ({
   },
 
   //Will be using json
-  sendData: (data) => {
-    const { socket } = useSocketStore.getState();
+  sendData: (data, message) => {
+    const { socket } = useStore.getState();
     if (socket) {
-      socket.emit("data", data);
+      socket.emit(data, message);
+      console.log(`Emitted message to event ${data}:`, message);
+    } else {
+      console.error('Socket is not connected');
     }
   },
+
+
+  
 
   addCardToPlayArea: (card) =>
     set((state) => {

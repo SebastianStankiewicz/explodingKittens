@@ -28,7 +28,7 @@ def create_game(data):
     
     room = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
     #join_room(room)
-    game = Game(room)
+    game = Game(room, int(data['numberOfPlayers']))
     activeGames.append([game, []])
     emit('game_created', {'roomCode': room})
     data = {"userName": data["userName"],
@@ -47,14 +47,14 @@ def joinGame(data):
     if not userName:
         send("Error: Username is required.", to=request.sid)
         return
-    
+    join_room(gameId)     
     for roomPair in activeGames:
             if roomPair[0].gameId == gameId:
                 roomPair[1].append(userName)
-    
-    join_room(gameId)            
-    emit('player_joined_game', {'playerUserNames': roomPair[1]}, to=gameId)
-    
+                playersLeftToJoin = roomPair[0].numberOfPlayers - len(roomPair[1])
+                emit('player_joined_game', {'playerUserNames': roomPair[1], 'playersLeftToJoin': playersLeftToJoin }, to=gameId)
+                if playersLeftToJoin == 0:
+                    emit('start_game', to=gameId)
     
 
 

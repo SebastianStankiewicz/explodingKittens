@@ -27,11 +27,12 @@ createCards("Rainbow Cat", "Junk","imgURL",  "junk", 4)
 
 
 class Game:
-    def __init__(self, gameId) -> None:
+    def __init__(self, gameId, numberOfPlayers) -> None:
         self.gameId = gameId
         self.players = []
         self.deck = []
         self.currentPlayerTurnIndex = 0
+        self.numberOfPlayers = numberOfPlayers
         
     def startGame(self, playerNames: list):
         #playerNames is a list of all the player names
@@ -45,10 +46,10 @@ class Game:
                 startingHand.append(self.deck.pop())
             self.players.append(Player(userName, i, startingHand))
         
-        for i in range(len(playerNames) - 1):
+        for i in range(self.numberOfPlayers - 1):
             self.deck.append(Card("Exploding kitten", "Must play a defuse or loose the game!", "IMGURL", "kitten"))
         
-        for i in range(6 - len(playerNames)):
+        for i in range(6 - self.numberOfPlayers):
             self.deck.append(Card("Defuse", "Defuses 1 exploding kitten", "imgURL", "defuse"))
         random.shuffle(self.deck)
 
