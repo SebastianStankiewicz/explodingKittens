@@ -5,9 +5,11 @@ import PlayerHand from "../components/PlayerHand";
 import PlayCardArea from "../components/PlayCardArea";
 import TurnOrder from "../components/TurnOrder";
 import Deck from "../components/Deck";
+import useStore from '../UseStore';
 
 const GamePage = () => {
   const [draggedCard, setDraggedCard] = useState(null);
+
  
 
   return (

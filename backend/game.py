@@ -92,7 +92,7 @@ class Game:
             
         return {"message": "Card not in hand"}
                 
-    def drawCard(self, player):
+    def drawCard(self):
         print(f"{self.players[self.currentPlayerTurnIndex].userName} Drew a card")
         drawnCard = self.deck.pop()
         if drawnCard.cardType == "kitten":
@@ -100,7 +100,7 @@ class Game:
             self.deck.append(Card("Exploding kitten", "Must play a defuse or loose the game!", "IMGURL", "kitten"))
             random.shuffle(self.deck)
         else:
-            player.addCardToHand(drawnCard)
+            self.players[self.currentPlayerTurnIndex].addCardToHand(drawnCard)
         
         #If the player is attacked then unmark as attacked and dont increment index
         if self.players[self.currentPlayerTurnIndex].attacked:
@@ -109,9 +109,7 @@ class Game:
             self.advanceTurn(1)
         
         return(drawnCard)
-            
-            
-            
+                  
     def advanceTurn(self, increment=1):
         if self.currentPlayerTurnIndex == len(self.players) - 1:
             self.currentPlayerTurnIndex = 0
@@ -119,7 +117,11 @@ class Game:
             self.currentPlayerTurnIndex += 1
         print(f"{self.players[self.currentPlayerTurnIndex].userName} turn")
                     
-
+    def checkIfPlayersTurn(self, userName):
+        for index, player in enumerate(self.players):
+            if userName == player.userName:
+                return index == self.currentPlayerTurnIndex
+        return False
 
 
 

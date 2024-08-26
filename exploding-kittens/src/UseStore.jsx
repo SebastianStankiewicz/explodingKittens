@@ -3,9 +3,12 @@ import { create } from "zustand";
 import nopeCardArt from "./cardArtWork/Nope-A-Jackanope-Bounds-into-the-Room.jpg";
 import beardCatArt from "./cardArtWork/Beard-Cat.jpg";
 import defuseCardArt from "./cardArtWork/Defuse-Via-3AM-Flatulence.jpg";
+import attackCardArt from "./cardArtWork/Attack-Bear-o-Dactyl.jpg";
+import favourCardArt from "./cardArtWork/Favor-Fall-So-Deeply-in-Love.jpg"
+
 
 import { io } from 'socket.io-client';
-import { useNavigate } from 'react-router-dom';
+
 
 const useStore = create((set) => ({
   cardsInPlayArea: [
@@ -114,7 +117,7 @@ const useStore = create((set) => ({
 
 
   
-
+//VISUAL NOT IMPACTING GAME LOGIC
   addCardToPlayArea: (card) =>
     set((state) => {
       const cardIndex = state.cardsInPlayerHand.findIndex(

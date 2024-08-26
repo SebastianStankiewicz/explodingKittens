@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, session
 from flask_socketio import SocketIO, send, join_room, emit
 from flask_cors import CORS
 
@@ -13,7 +13,7 @@ app.config['SECRET_KEY'] = 'secretkey!'
 socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-activeGames = []
+activeGames = {}
 
 @socketio.on('createRoom')
 def create_game(data):
@@ -27,9 +27,10 @@ def create_game(data):
         return
     
     room = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-    #join_room(room)
     game = Game(room, int(data['numberOfPlayers']))
-    activeGames.append([game, []])
+    #activeGames.append([game, []])
+    activeGames[room] = (game, [])
+    
     emit('game_created', {'roomCode': room})
     data = {"userName": data["userName"],
             "gameId": room}
@@ -47,16 +48,32 @@ def joinGame(data):
     if not userName:
         send("Error: Username is required.", to=request.sid)
         return
-    join_room(gameId)     
-    for roomPair in activeGames:
-            if roomPair[0].gameId == gameId:
-                roomPair[1].append(userName)
-                playersLeftToJoin = roomPair[0].numberOfPlayers - len(roomPair[1])
-                emit('player_joined_game', {'playerUserNames': roomPair[1], 'playersLeftToJoin': playersLeftToJoin }, to=gameId)
-                if playersLeftToJoin == 0:
-                    emit('start_game', to=gameId)
+    join_room(gameId)  
     
+    session['gameId'] = gameId
+    session['userName'] = userName
 
+    activeGames[gameId][1].append(userName)
+    playersLeftToJoin = activeGames[gameId][0].numberOfPlayers - len(activeGames[gameId][1])
+    emit('player_joined_game', {'playerUserNames': activeGames[gameId][1], 'playersLeftToJoin': playersLeftToJoin }, to=gameId)
+    
+    
+    if playersLeftToJoin == 0:
+        emit('start_game', to=gameId)
+        activeGames[gameId][0].startGame(activeGames[gameId][1])
+        
+@socketio.on('drawCard')
+def drawCardSOCKETCALL(data):
+    gameId = session.get('gameId')  
+    userName = session.get('userName')
+    game = activeGames[gameId][0]
+    if game.checkIfPlayersTurn(userName):
+        #Implement an appropriate emition to the client to then update there screen with new card.
+        #Peform logic check. If expliding kitten emit to room otherwise just to request SID and emit new player notification
+        game.drawCard()
+    else:
+        print("Not allowed to draw card (not your turn)")
+        
 
 
 
