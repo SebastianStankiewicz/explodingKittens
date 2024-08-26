@@ -1,57 +1,46 @@
 import { create } from "zustand";
+import { io } from 'socket.io-client';
 
 import nopeCardArt from "./cardArtWork/Nope-A-Jackanope-Bounds-into-the-Room.jpg";
 import beardCatArt from "./cardArtWork/Beard-Cat.jpg";
-import defuseCardArt from "./cardArtWork/Defuse-Via-3AM-Flatulence.jpg";
+import defuseCatArt from "./cardArtWork/Defuse-Via-3AM-Flatulence.jpg";
 import attackCardArt from "./cardArtWork/Attack-Bear-o-Dactyl.jpg";
 import favourCardArt from "./cardArtWork/Favor-Fall-So-Deeply-in-Love.jpg"
+import shuffleCardArt from "./cardArtWork/Shuffle-A-Kraken-Emerges-and-Hes-Super-Upset.jpg"
+import seeTheFutureCardArt from "./cardArtWork/See-the-Future-Ask-the-All-Seeing-Goat-Wizard.jpg"
+import explodingKittenArt from "./cardArtWork/Exploding-Kitten-Alien.jpg"
+import tacoCatArt from "./cardArtWork/Tacocat.jpg";
+import watermelonCatArt from "./cardArtWork/Cattermelon.jpg";
+import pooCatArt from "./cardArtWork/Hairy-Potato-Cat.jpg";
+import rainbowCatArt from "./cardArtWork/Rainbow-Ralphing-Cat.jpg"
+import skipCardArt from "./cardArtWork/Skip-Commandeer-a-Bunnyraptor.jpg"
 
+const useStore = create((set, get) => ({
 
-import { io } from 'socket.io-client';
+  artworkMapping: {
+    'nopeCardArt': nopeCardArt,
+    'beardCatArt': beardCatArt,
+    'tacoCatArt': tacoCatArt,
+    'watermelonCatArt':watermelonCatArt,
+    'pooCatArt': pooCatArt,
+    'rainbowCatArt': rainbowCatArt,
+    'defuseCatArt': defuseCatArt,
+    'attackCardArt': attackCardArt,
+    'favourCardArt': favourCardArt,
+    'shuffleCardArt': shuffleCardArt,
+    'seeTheFutureCardArt': seeTheFutureCardArt,
+    'explodingKittenArt': explodingKittenArt,
+    'skipCardArt': skipCardArt
 
+  },
 
-const useStore = create((set) => ({
-  cardsInPlayArea: [
-    {
-      title: "Beard Cat",
-      description: "Junk",
-      artWork: beardCatArt,
-      cardType: "junk",
-    },
-  ],
+  getCardArt: (artWorkIdentifier) => {
+    return (get().artworkMapping[artWorkIdentifier]);
+  },
 
-  cardsInPlayerHand: [
-    {
-      title: "Nope",
-      description: "A nope card",
-      artWork: nopeCardArt,
-      cardType: "nope",
-    },
-    {
-      title: "Beard Cat",
-      description: "Junk",
-      artWork: beardCatArt,
-      cardType: "junk",
-    },
-    {
-      title: "Defuse Card",
-      description: "Defuses a single exploding kitten.",
-      artWork: defuseCardArt,
-      cardType: "defuse",
-    },
-    {
-      title: "Nope",
-      description: "A nope card",
-      artWork: nopeCardArt,
-      cardType: "nope",
-    },
-    {
-      title: "Nope",
-      description: "A nope card",
-      artWork: nopeCardArt,
-      cardType: "nope",
-    },
-  ],
+  cardsInPlayArea: [],
+
+  cardsInPlayerHand: [],
 
   gameId: null,
   userName: null,
@@ -86,8 +75,19 @@ const useStore = create((set) => ({
       set( {numberOfPlayersToJoin: message.playersLeftToJoin})
     });
 
-    socket.on("start_game", () => {
+    socket.on("add_card_to_hand", (message) => {
+      console.log(message);
+      set((state) => ({cardsInPlayerHand: [...state.cardsInPlayerHand, message]}))
+    });
+
+
+
+    socket.on("start_game", (message) => {
+      const userName = get().userName;
+      set({ cardsInPlayerHand: message[userName] });
       set({gameStarted: true});
+      console.log(message.userName)
+      
     })
 
     socket.on("disconnect", () => {

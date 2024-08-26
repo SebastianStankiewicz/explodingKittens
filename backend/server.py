@@ -59,8 +59,18 @@ def joinGame(data):
     
     
     if playersLeftToJoin == 0:
-        emit('start_game', to=gameId)
         activeGames[gameId][0].startGame(activeGames[gameId][1])
+        data = {}
+        #For each player iterate through there starting hand
+        for player in activeGames[gameId][0].players:
+            data[player.userName] = ([])
+            for card in player.hand:
+                data[player.userName].append({'title': card.title,
+                                      'description': card.description,
+                                      'artWork': card.imageURl,
+                                      'cardType': card.cardType})
+        #emit('starting_hand_cards', data, to=gameId)
+        emit('start_game', data, to=gameId)
         
 @socketio.on('drawCard')
 def drawCardSOCKETCALL(data):
@@ -70,7 +80,12 @@ def drawCardSOCKETCALL(data):
     if game.checkIfPlayersTurn(userName):
         #Implement an appropriate emition to the client to then update there screen with new card.
         #Peform logic check. If expliding kitten emit to room otherwise just to request SID and emit new player notification
-        game.drawCard()
+        card = game.drawCard()
+        if card.cardType != 'kitten':
+            emit('add_card_to_hand', {'title': card.title,
+                                      'description': card.description,
+                                      'artWork': card.imageURl,
+                                      'cardType': card.cardType}, to=request.sid)
     else:
         print("Not allowed to draw card (not your turn)")
         

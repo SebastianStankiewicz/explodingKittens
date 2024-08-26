@@ -6,7 +6,7 @@ class Player:
         self.hand = startingHand #A list of card objects.
         self.attacked = False #To check if an extra turn is required.
         
-        self.hand.append(Card("Defuse", "Defuses 1 exploding kitten", "imgURL", "defuse"))
+        self.hand.append(Card("Defuse", "Defuses 1 exploding kitten", "defuseCatArt", "defuse"))
 
     def checkIfCardTypeInHand(self, cardType:str) -> bool:
         for card in self.hand:

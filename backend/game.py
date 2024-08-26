@@ -12,18 +12,18 @@ def createCards(title, description, imageURl, cardType, numberOfCopies):
     for i in range(numberOfCopies):
         cardList.append(Card(title, description, imageURl, cardType))
 
-createCards("Nope", "Stop any action except for an Exploding Kitten or a defuse Card.", "imgURL", "nope", 5)
-createCards("Attack", "End your turn without drawing and force the next player to take 2 turns in a row.", "imgURL", "attack", 4)
-createCards("Skip", "Immediatley end your turn without drawing a card.", "imgURL", "skip", 4)
-createCards("Favour", "Force any other player to give you 1 card from their hand. They choose which card to give you", "imgURL", "favour", 4)
-createCards("Shuffle", "Shuffle the draw pile.", "imgURL", "shuffle", 4)
-createCards("See the future", "Peek at the top 3 cards from the draw pile", "imgURL", "future", 5)
+createCards("Nope", "Stop any action except for an Exploding Kitten or a defuse Card.", "nopeCardArt", "nope", 5)
+createCards("Attack", "End your turn without drawing and force the next player to take 2 turns in a row.", "attackCardArt", "attack", 4)
+createCards("Skip", "Immediatley end your turn without drawing a card.", "skipCardArt", "skip", 4)
+createCards("Favour", "Force any other player to give you 1 card from their hand. They choose which card to give you", "favourCardArt", "favour", 4)
+createCards("Shuffle", "Shuffle the draw pile.", "shuffleCardArt", "shuffleCardArt", 4)
+createCards("See the future", "Peek at the top 3 cards from the draw pile", "seeTheFutureCardArt", "future", 5)
 
-createCards("Taco Cat", "Junk", "imgURL", "junk", 4)
-createCards("Watermelon Cat", "Junk", "imgURL", "junk", 4)
-createCards("Poo Cat", "Junk", "imgURL", "junk", 4)
-createCards("Beard Cat", "Junk", "imgURL", "junk", 4)
-createCards("Rainbow Cat", "Junk","imgURL",  "junk", 4)
+createCards("Taco Cat", "Junk", "tacoCatArt", "junk", 4)
+createCards("Watermelon Cat", "Junk", "watermelonCatArt", "junk", 4)
+createCards("Poo Cat", "Junk", "pooCatArt", "junk", 4)
+createCards("Beard Cat", "Junk", "beardCatArt", "junk", 4)
+createCards("Rainbow Cat", "Junk","rainbowCatArt",  "junk", 4)
 
 
 class Game:
@@ -47,10 +47,10 @@ class Game:
             self.players.append(Player(userName, i, startingHand))
         
         for i in range(self.numberOfPlayers - 1):
-            self.deck.append(Card("Exploding kitten", "Must play a defuse or loose the game!", "IMGURL", "kitten"))
+            self.deck.append(Card("Exploding kitten", "Must play a defuse or loose the game!", "explodingKittenArt", "kitten"))
         
         for i in range(6 - self.numberOfPlayers):
-            self.deck.append(Card("Defuse", "Defuses 1 exploding kitten", "imgURL", "defuse"))
+            self.deck.append(Card("Defuse", "Defuses 1 exploding kitten", "defuseCatArt", "defuse"))
         random.shuffle(self.deck)
 
     def playCard(self, player, cardType, targetIndex=None):
@@ -124,51 +124,3 @@ class Game:
         return False
 
 
-
-"""game = Game()
-game.startGame(["Alan", "Bob", "Casey", "Dylan", "Ellie"])
-
-cards = []
-for card in game.players[game.currentPlayerTurnIndex].hand:
-        cards.append(card.title)
-"""
-
-
-
-#game.playCard(game.players[game.currentPlayerTurnIndex], "shuffle")
-
-"""game.playCard(game.players[game.currentPlayerTurnIndex], "attack", 4)
-
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.playCard(game.players[game.currentPlayerTurnIndex], "shuffle")
-
-game.playCard(game.players[game.currentPlayerTurnIndex], "future")
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.playCard(game.players[game.currentPlayerTurnIndex], "skip")
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-game.drawCard(game.players[game.currentPlayerTurnIndex])"""
-
-
-"""cards = []
-for card in game.players[game.currentPlayerTurnIndex].hand:
-        cards.append(card.title)
-
-
-game.drawCard(game.players[game.currentPlayerTurnIndex])
-
-
-print("\n".join(card.title for card in game.deck))"""
-
-"""for player in game.players:
-    cards = []
-    for card in player.hand:
-        cards.append(card.title)
-    print(cards)"""
