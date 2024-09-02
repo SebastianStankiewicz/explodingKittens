@@ -86,11 +86,30 @@ def drawCardSOCKETCALL(data):
                                       'description': card.description,
                                       'artWork': card.imageURl,
                                       'cardType': card.cardType}, to=request.sid)
+            
+        else:
+            print("exploading kitten. Deal with this later")
+        
     else:
         print("Not allowed to draw card (not your turn)")
         
 
-
+@socketio.on ('playCard')
+def playCardSOCKETCALL(data):
+    gameId = session.get('gameId')  
+    userName = session.get('userName')
+    playedCard = data["cardType"]
+    game = activeGames[gameId][0]
+    
+    if game.checkIfPlayersTurn(userName):
+        for player in game.players:
+            if player.userName == userName:
+                try:
+                    uniqueEffect = game.playCard(player, playedCard)
+                except:
+                    print(data["cardType"] + " broke it")
+                emit('player_played_card', data, room=gameId, skip_sid=request.sid)
+        
 
 
 if __name__ == '__main__':

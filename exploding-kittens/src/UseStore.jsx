@@ -75,6 +75,13 @@ const useStore = create((set, get) => ({
       set( {numberOfPlayersToJoin: message.playersLeftToJoin})
     });
 
+    socket.on("player_played_card", (message) => {
+      console.log(message);
+      set((state) => ({cardsInPlayArea: [...state.cardsInPlayArea, message]}))
+    });
+
+
+
     socket.on("add_card_to_hand", (message) => {
       console.log(message);
       set((state) => ({cardsInPlayerHand: [...state.cardsInPlayerHand, message]}))
@@ -136,9 +143,10 @@ const useStore = create((set, get) => ({
           ),
         };
       }
-
       return state; // If card isn't found, return state as is.
     }),
+
+
 
   drawCard: (card) =>
     set((state) => {

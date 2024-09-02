@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import nopeCardArt from "../cardArtWork/Nope-A-Jackanope-Bounds-into-the-Room.jpg";
-import beardCatArt from "../cardArtWork/Beard-Cat.jpg";
-import defuseCardArt from "../cardArtWork/Defuse-Via-3AM-Flatulence.jpg";
 import Card from "./Card";
 import { motion } from "framer-motion";
 import useStore from "../UseStore";
@@ -10,11 +7,18 @@ const PlayCardArea = ({ draggedCard, setDraggedCard }) => {
   const cardsInPlayArea = useStore((state) => state.cardsInPlayArea);
   const addCardToPlayArea = useStore((state) => state.addCardToPlayArea);
   const getCardArt = useStore((state) => state.getCardArt);
+  const sendData = useStore((state) => state.sendData);
 
   const handleDrop = () => {
     if (draggedCard) {
       addCardToPlayArea(draggedCard);
       console.log(draggedCard);
+      sendData("playCard", {
+        title: draggedCard.title,
+        description: draggedCard.description,
+        artWork: draggedCard.artWork,
+        cardType: draggedCard.cardType,
+      });
       setDraggedCard(null); // Reset the dragged card
     }
   };

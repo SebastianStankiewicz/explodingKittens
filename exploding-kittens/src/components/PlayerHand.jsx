@@ -9,6 +9,7 @@ const PlayerHand = ({ setDraggedCard }) => {
   const cardsInHand = useStore((state) => state.cardsInPlayerHand);
   const addCardToPlayArea = useStore((state) => state.addCardToPlayArea);
   const getCardArt = useStore((state) => state.getCardArt);
+  const sendData = useStore((state) => state.sendData);
 
   const controls = useDragControls();
 
@@ -19,6 +20,12 @@ const PlayerHand = ({ setDraggedCard }) => {
 
   function clickToPlayCard(card) {
     addCardToPlayArea(card);
+    sendData("playCard", {
+      title: card.title,
+      description: card.description,
+      artWork: card.artWork,
+      cardType: card.cardType,
+    });
   }
 
   return (

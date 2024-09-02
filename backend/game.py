@@ -62,7 +62,7 @@ class Game:
                 if cardType == "attack":
                     self.advanceTurn(1)
                     self.players[targetIndex].attacked = True
-                    data = {"cardPlayed": cardType,
+                    data = {"title": cardType,
                             "attackedPlayerName": self.players[targetIndex].userName,}
                 if cardType == "skip":
                     self.advanceTurn(1)
